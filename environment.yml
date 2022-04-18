@@ -1,0 +1,13 @@
+name: asdl
+channels:
+  - conda-forge
+  - defaults
+dependencies:
+  - python=3.8
+  - pip
+  - pandas
+  - matplotlib
+  - jupyter 
+  - jupyterlab
+  - tqdm
+  - termcolor
