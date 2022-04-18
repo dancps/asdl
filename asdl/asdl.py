@@ -15,6 +15,7 @@ class DynamicSystem:
         self.characteristic = self.get_characteristic()
         self.eigenval = self.get_eigenval(verbose = self.__verbose, debug = self.__debug )
         self.eigenvec = self.get_eigenvec(verbose = self.__verbose, debug = self.__debug )
+               
         
         self.inital_contidition = inital_contidition
         self.C = self.get_system()
@@ -84,22 +85,31 @@ class DynamicSystem:
         # Get eigenvalues
         eigval = self.get_eigenval(matrix)
     
-        temp = np.tensordot(eigval,np.identity(matrix.shape[0]),0)-matrix
-        temp_b = np.zeros((1,temp.shape[-1])).T
+        # temp = np.tensordot(eigval,np.identity(matrix.shape[0]),0)-matrix
+        # temp_b = np.zeros((1,temp.shape[-1])).T
         
-        eigvec = []
-        for idx_a, a in enumerate(temp):
-            if debug: print(f"  += Vector {idx_a}")
-            normalized = np.array([b/b[0] for b in a])
-            if debug: print("    Normalized = \n",normalized)
-            li_comparison = np.all(np.array([np.isclose(normalized[0],b,rtol=1e-10) for b in normalized])==True)
-            if debug: print("    Is L.I.?",li_comparison)
-            if(li_comparison): 
-                eig = np.array([[1],[-a[0,0]/a[0,1]]])
-            else: 
-                eig = np.array(np.linalg.solve(a,temp_b))
-            eigvec.append(eig)
+        # eigvec = []
+        # for idx_a, a in enumerate(temp):
+        #     if debug: print(f"  += Vector {idx_a}")
+        #     print(a)
+        #     normalized = np.array([b/b[0] if b[0]!=0 else np.zeros(b.shape) for b in a])
+        #     if debug: print("    Normalized = \n",normalized)
+        #     li_comparison = np.all(np.array([np.isclose(normalized[0],b,rtol=1e-10) for b in normalized])==True)
+        #     if debug: print("    Is L.I.?",li_comparison)
+        #     if(li_comparison): 
+        #         eig = np.array([[1],[-a[0,0]/a[0,1]]])
+        #     else: 
+        #         eig = np.array(np.linalg.solve(a,temp_b))
+        #     eigvec.append(eig)
         eigvec = np.array(eigvec)
+        
+        _ , eigvec = np.linalg.eig(matrix)
+        # print("aaa")
+        # print(eigvec[0],eigvec[1])
+        # print(eigvec[0]/eigvec[0,0],eigvec[1])
+
+        eigvec = np.array([[[v] for v in i] for i in eigvec])
+        
         return eigvec
 
     def get_system(self, A=None, X_init=None):
@@ -120,6 +130,7 @@ class DynamicSystem:
             X_init = self.inital_contidition 
         eigenval =  self.get_eigenval(A)
         eigenvec =  self.get_eigenvec(A)
+        
         if(np.any(X_init==None)): X_init = np.ones_like(eigenval)
         C = np.linalg.inv(np.concatenate(eigenvec,axis=1))@X_init
         return C
