@@ -8,4 +8,4 @@ Prof.:
 
 |Aula| Tópico| Links|
 |-|-|-|
-| Aula 1 | Definições e Modelagem Matemática de Sistemas Dinâmicos no Espaço de Estado| Notebook | 
+| Aula 1 | Definições e Modelagem Matemática de Sistemas Dinâmicos no Espaço de Estado| [Notebook](notebooks/aula1.ipynb) | 
